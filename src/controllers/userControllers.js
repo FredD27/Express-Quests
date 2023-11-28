@@ -5,12 +5,10 @@ const getUsers = (req, res) => {
     .query("select * from users")
     .then((result) => {
       const [users] = result;
-      console.log(users);
       res.status(200).json(users);
     })
     .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
+      res.status(400).send({ message: err.message });
     });
 };
 
@@ -27,8 +25,7 @@ const getUserById = (req, res) => {
       }
     })
     .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
+      res.status(400).send({ message: err.message });
     });
 };
 
@@ -44,8 +41,7 @@ const postUser = (req, res) => {
       res.status(201).send({ id: result.insertId });
     })
     .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
+      res.status(400).send({ message: err.message });
     });
 };
 
@@ -66,8 +62,7 @@ const updateUser = (req, res) => {
       }
     })
     .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
+      res.status(409).send({ message: err.message });
     });
 };
 
