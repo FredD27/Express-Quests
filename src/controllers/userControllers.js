@@ -41,7 +41,7 @@ const postUser = (req, res) => {
       res.status(201).send({ id: result.insertId });
     })
     .catch((err) => {
-      res.status(400).send({ message: err.message });
+      res.status(422).send({ message: err.message });
     });
 };
 
@@ -62,7 +62,7 @@ const updateUser = (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(409).send({ message: err.message });
+      res.status(422).send({ message: err.message });
     });
 };
 
