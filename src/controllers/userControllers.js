@@ -3,8 +3,10 @@ const database = require("../../database");
 const getUsers = (req, res) => {
   database
     .query("select * from users")
-    .then(([users]) => {
-      res.json(users);
+    .then((result) => {
+      const [users] = result;
+      console.log(users);
+      res.status(200).json(users);
     })
     .catch((err) => {
       console.error(err);
@@ -19,7 +21,7 @@ const getUserById = (req, res) => {
     .query("select * from users where id = ?", [id])
     .then(([users]) => {
       if (users[0] != null) {
-        res.json(users[0]);
+        res.status(200).json(users[0]);
       } else {
         res.sendStatus(404);
       }
@@ -29,12 +31,13 @@ const getUserById = (req, res) => {
       res.sendStatus(500);
     });
 };
+
 const postUser = (req, res) => {
   const { firstname, lastname, email, city, language } = req.body;
 
   database
     .query(
-      "INSERT INTO users(firstname, lastname,email,city, language) VALUES (?, ?, ?, ?, ?)",
+      "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
       [firstname, lastname, email, city, language]
     )
     .then(([result]) => {
@@ -46,8 +49,31 @@ const postUser = (req, res) => {
     });
 };
 
+const updateUser = (req, res) => {
+  const id = parseInt(req.params.id);
+  const { firstname, lastname, email, city, language } = req.body;
+
+  database
+    .query(
+      "update users set firstname = ?, lastname = ?, email = ?, city = ?, language = ? where id = ?",
+      [firstname, lastname, email, city, language, id]
+    )
+    .then(([result]) => {
+      if (result.affectedRows === 0) {
+        res.sendStatus(404);
+      } else {
+        res.sendStatus(204);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
 module.exports = {
   getUsers,
   getUserById,
   postUser,
+  updateUser,
 };
